@@ -19,12 +19,28 @@ front:
 
 mysql:
   build: ./docker/mysql/
-  container_name: mysql
+  
   ports:
     - "3306:3306"
+  volumes_from:
+    - data
   environment:
     MYSQL_ROOT_PASSWORD: password
-
+data:
+  build: ./docker/mysql/
+  container_name: mysqldata
+  volumes:
+    - /var/lib/mysql
+  command: "true"
+phpmyadmin:
+  build: ./docker/phpmyadmin/
+  container_name: phpmyadmin
+  ports:
+    - "8080:80"
+  links:
+    - mysql
+  environment:
+    PMA_HOST: mysql
 mongo:
   build: ./docker/mongo/
   container_name: mongo
