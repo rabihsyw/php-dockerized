@@ -1,5 +1,6 @@
 front:
   build: .
+  container_name: front
   ports:
     - "80:80"
     - "443:443"
@@ -17,35 +18,41 @@ front:
     - ./logs:/var/log/supervisor
 
 mysql:
-  image: mysql
+  build: ./docker/mysql/
+  container_name: mysql
   ports:
     - "3306:3306"
   environment:
     MYSQL_ROOT_PASSWORD: password
 
 mongo:
-  image: mongo
+  build: ./docker/mongo/
+  container_name: mongo
   ports:
     - "27017:27017"
 
 memcached:
-  image: memcached
+  build: ./docker/memcached/
+  container_name: memcached
   ports:
     - "11211:11211"
 
 redis:
-  image: redis
+  build: ./docker/redis/
+  container_name: redis
   ports:
     - "6379:6379"
 
 elasticsearch:
-  image: elasticsearch
+  build: ./docker/elasticsearch/
+  container_name: elasticsearch
   ports:
     - "9200:9200"
     - "9300:9300"
 
 rabbitmq:
-  image: rabbitmq:3.6.1-management
+  build: ./docker/rabbitmq/
+  container_name: rabbitmq
   ports:
     - "15672:15672"
     - "5672:5672"
