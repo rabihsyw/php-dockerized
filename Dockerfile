@@ -15,16 +15,23 @@ RUN rm -f /etc/nginx/conf.d/*
 RUN apt-get update && apt-get install -my \
   supervisor \
   curl \
+  librabbitmq-dev \
+  librabbitmq1 \
   wget \
   php5-curl \
+  php5-dev \
   php5-fpm \
   php5-gd \
   php5-memcached \
   php5-mysql \
   php5-mcrypt \
+  php5-mongo \
+  php-pear \
   php5-sqlite \
   php5-xdebug \
-  php-apc
+  php-apc \
+  php5-redis \
+  vim
 
 # Ensure that PHP5 FPM is run as root.
 RUN sed -i "s/user = www-data/user = root/" /etc/php5/fpm/pool.d/www.conf
@@ -41,6 +48,11 @@ RUN sed -i '/^;pm\.status_path/s/^;//' /etc/php5/fpm/pool.d/www.conf
 # Prevent PHP Warning: 'xdebug' already loaded.
 # XDebug loaded with the core
 RUN sed -i '/.*xdebug.so$/s/^/;/' /etc/php5/mods-available/xdebug.ini
+
+# Install AMQP extension for php
+RUN pecl install amqp && \
+	echo "extension=amqp.so" > /etc/php5/mods-available/amqp.ini && \
+	php5enmod amqp
 
 # Add configuration files
 COPY conf/nginx.conf /etc/nginx/
